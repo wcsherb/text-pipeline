@@ -1,6 +1,6 @@
-require(rvest)
-require(stringr)
+require(tidyverse)
 require(rtika)
+require(tokenizers)
 
 # Download Audits ----
 oig_url <- 'https://www.oig.dhs.gov/reports/audits-inspections-and-evaluations?field_dhs_agency_target_id=2&field_fy_value=All'
