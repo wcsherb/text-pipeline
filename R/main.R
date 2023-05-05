@@ -18,7 +18,7 @@ setwd('raw')
 batch <- list.files()
 html <- rtika::tika_html(batch)
 
-# Tokenize ----
+# Tokenize into paragraphs ----
 all_tokens <- tibble::tibble(file=character(), text=character())
 for ( i in 1:length(batch) ) {
   message('Tokenize ', i)
