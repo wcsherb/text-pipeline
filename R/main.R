@@ -1,17 +1,10 @@
-require(tidyverse)
+require(dplyr)
+require(rvest)
+require(stringr)
 require(rtika)
 require(tokenizers)
 
-# Download Audits ----
-oig_url <- 'https://www.oig.dhs.gov/reports/audits-inspections-and-evaluations?field_dhs_agency_target_id=2&field_fy_value=All'
-oig_audits <- read_html(oig_url) %>% html_elements('tbody') %>% html_elements('a') %>% html_attr('href')
 setwd('audits')
-for ( this_url in oig_audits ) {
-  file_name <- str_extract(this_url, '[A-Za-z0-9-]+\\.pdf$')
-  message('Downloading ', file_name)
-  this_url <- paste0('https://www.oig.dhs.gov', this_url)
-  download.file(this_url, file_name)
-}
 
 # Tika Audits ----
 batch <- list.files()
@@ -29,6 +22,9 @@ for ( i in 1:length(batch) ) {
   this_df <- tibble::tibble(file=file_name, text=tokens)
   all_tokens <- rbind(all_tokens, this_df)
 }
+
+all_tokens <- all_tokens %>% mutate(text = trimws(text)) %>%
+  filter(!is.na(text)) %>% filter(nchar(text) > 0)
 
 # Write Text ----
 setwd('../data')
