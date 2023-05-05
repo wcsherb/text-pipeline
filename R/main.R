@@ -14,7 +14,6 @@ for ( this_url in oig_audits ) {
 }
 
 # Tika Audits ----
-setwd('raw')
 batch <- list.files()
 html <- rtika::tika_html(batch)
 
@@ -32,5 +31,5 @@ for ( i in 1:length(batch) ) {
 }
 
 # Write Text ----
-setwd('../../data')
+setwd('../data')
 write.csv(all_tokens, 'oig_tokens.csv')
