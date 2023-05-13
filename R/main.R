@@ -48,6 +48,18 @@ rm(list=ls())
 # pacman::p_load_gh("trinker/stansent")
 
 require(stansent)
+require(dplyr)
 dat <- read.csv('data/oig_paragraphs.csv')
+dat <- tibble::as_tibble(dat)
 stansent::check_setup()
 
+mytext <- c(
+  'do you like it?  But I hate really bad dogs',
+  'I am the best friend.',
+  'Do you really like it?  I\'m not a fan'
+)
+sentiment_stanford(mytext) 
+
+# https://www.oig.dhs.gov/sites/default/files/assets/2020-05/OIG-20-29-May20.pdf#page=2
+sentiment_stanford_by(dat$text[13:15])
+sentimentr::sentiment_by(dat$text[13:15])
