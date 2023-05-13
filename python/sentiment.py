@@ -1,8 +1,10 @@
+import os
 import pandas as pd
 import regex as re
 import torch
 from textacy.preprocessing.replace import urls
 from transformers import BertConfig, BertTokenizer, BertForSequenceClassification
+from sklearn.model_selection import train_test_split
 
 # test PyTorch
 x = torch.rand(5, 3)
@@ -25,7 +27,11 @@ def clean(text):
 # PREPARE TEXT
 
 # Read the paragraph tokens from the OIG final reports
-file = 'data/oig_tokens.csv'
+cwd = os.getcwd()
+if cwd != '/home/wcs/projects/text-pipeline/data':
+  os.chdir('data')
+
+file = 'oig_sentences.csv'
 df = pd.read_csv(file)
 # Remove column with row nums
 df.drop(df.columns[0], axis=1, inplace=True)
@@ -40,4 +46,20 @@ df['text'] = df['text'].map(clean)
 config = BertConfig.from_pretrained('bert-base-uncased', finetuningtask='binary')
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertForSequenceClassification.from_pretrained('bert-base-uncased')
+
+# Page 314
+def get_tokens(text, tokenizer, max_seq_length, add_special_tokens=True):
+  input_ids = tokenizer.encode(text, add_special_tokens=add_special_tokens, max_length=max_seq_length, pad_to_max_length=True)
+  attention_mask = [int(id > 0) for id in input_ids]
+  assert len(input_ids) == max_seq_length
+  assert len(attention_mask) == max_seq_length
+  return(input_ids, attention_mask)
+
+text = "Here is the sentence I want embeddings for."
+input_ids, attention_mask = get_tokens(text, tokenizer, max_seq_length=30, add_special_tokens=True)
+input_tokens = tokenizer.convert_ids_to_tokens(input_ids)
+print(text)
+print(input_tokens)
+print(input_ids)
+print(attention_mask)
 

@@ -26,6 +26,17 @@ for ( i in 1:length(batch) ) {
 all_tokens <- all_tokens %>% mutate(text = trimws(text)) %>%
   filter(!is.na(text)) %>% filter(nchar(text) > 0)
 
+all_sentences <- tibble::tibble(file=character(), paragraph=integer(), text=character())
+# Tokenize into sentences ----
+for ( i in 1:nrow(all_tokens) ) {
+  if ( i %% 100 == 0 ) message("Tokenize ", i, " of ", nrow(all_tokens))
+  tokens <- tokenizers::tokenize_sentences(all_tokens$text[i])
+  this_df <- tibble::tibble(file=all_tokens$file[i], paragraph=i, text=tokens[[1]])
+  all_sentences <- rbind(all_sentences, this_df)
+}
+
 # Write Text ----
 setwd('../data')
-write.csv(all_tokens, 'oig_tokens.csv')
+write.csv(all_tokens, 'oig_paragraphs.csv')
+write.csv(all_sentences, 'oig_sentences.csv')
+rm(list=ls())
