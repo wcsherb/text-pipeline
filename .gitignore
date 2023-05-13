@@ -53,3 +53,4 @@ audits/
 data/
 venv/
 python/.ipynb_checkpoints/
+stanford-corenlp-full-2017-06-09/

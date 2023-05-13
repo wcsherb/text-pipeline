@@ -40,3 +40,14 @@ setwd('../data')
 write.csv(all_tokens, 'oig_paragraphs.csv')
 write.csv(all_sentences, 'oig_sentences.csv')
 rm(list=ls())
+
+# Try https://github.com/trinker/stansent
+# if (!require("pacman")) install.packages("pacman")
+# pacman::p_load_gh('wcsherb/coreNLPsetup')
+# pacman::p_load_gh("trinker/sentimentr")
+# pacman::p_load_gh("trinker/stansent")
+
+require(stansent)
+dat <- read.csv('data/oig_paragraphs.csv')
+stansent::check_setup()
+
